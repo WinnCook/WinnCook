@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BTC-USD Live Ticker Test</title>
+    <style>
+        /* Simple terminal-style look */
+        html,body {
+            margin: 0;
+            height: 100%;
+            background: #000;
+            color: #0f0;
+            font-family: monospace;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        #price {
+            font-size: 3rem;
+            transition: color 0.2s ease;
+        }
+        #status {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div id="price">Connecting…</div>
+    <div id="status"></div>
+
+    <script>
+    (() => {
+        const WS_URL = "wss://ws-feed.exchange.coinbase.com";
+        const priceEl   = document.getElementById("price");
+        const statusEl  = document.getElementById("status");
+        let lastPrice   = null;
+
+        /** Opens a WebSocket and subscribes to BTC-USD ticker */
+        function connect() {
+            statusEl.textContent = "Opening WebSocket…";
+            const ws = new WebSocket(WS_URL);
+            let keepAlive; // interval id
+
+            ws.addEventListener("open", () => {
+                statusEl.textContent = "Subscribing to BTC-USD …";
+                ws.send(JSON.stringify({
+                    type: "subscribe",
+                    product_ids: ["BTC-USD"],
+                    channels: ["ticker"] // add "heartbeat" here if desired
+                }));
+
+                // optional ping to keep connection fresh
+                keepAlive = setInterval(() => {
+                    if (ws.readyState === WebSocket.OPEN) {
+                        ws.send(JSON.stringify({type: "ping"}));
+                    }
+                }, 30_000); // every 30s
+            });
+
+            ws.addEventListener("message", ev => {
+                try {
+                    const data = JSON.parse(ev.data);
+                    if (data.type !== "ticker") return;
+
+                    const price = parseFloat(data.price);
+                    if (Number.isNaN(price)) return;
+
+                    // format with two decimals
+                    const formatted = price.toLocaleString("en-US", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    });
+                    priceEl.textContent = `$${formatted}`;
+
+                    if (lastPrice !== null) {
+                        if (price > lastPrice) {
+                            priceEl.style.color = "#0f0"; // green for up
+                        } else if (price < lastPrice) {
+                            priceEl.style.color = "#f00"; // red for down
+                        }
+                    }
+                    lastPrice = price;
+                } catch (err) {
+                    console.error("Failed to parse message", err);
+                }
+            });
+
+            ws.addEventListener("close", ({code, reason}) => {
+                clearInterval(keepAlive);
+                statusEl.textContent = `WebSocket closed (${code}) — reconnecting in 5s…`;
+                priceEl.style.color = "#888";
+                setTimeout(connect, 5000);
+            });
+
+            ws.addEventListener("error", err => {
+                console.error("WebSocket error", err);
+            });
+        }
+
+        // Initial connect
+        connect();
+    })();
+    </script>
+</body>
+</html>
