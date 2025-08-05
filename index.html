@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin Matrix Visualization</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+            color: #00ff00;
+        }
+        
+        #status {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        #price-display {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        #matrix-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .matrix-column {
+            position: absolute;
+            top: 0;
+            font-size: 20px;
+            line-height: 1.2;
+            white-space: nowrap;
+            animation: matrix-fall 3s linear infinite;
+        }
+        
+        @keyframes matrix-fall {
+            0% {
+                transform: translateY(-100%);
+            }
+            100% {
+                transform: translateY(100vh);
+            }
+        }
+        
+        .price-up {
+            color: #00ff00 !important;
+            animation-direction: normal;
+        }
+        
+        .price-down {
+            color: #ff0000 !important;
+            animation-direction: reverse;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="status">Connecting to Coinbase...</div>
+    <div id="price-display">$0.00</div>
+    <div id="matrix-container"></div>
+    
+    <script>
+        class BitcoinMatrix {
+            constructor() {
+                this.ws = null;
+                this.isConnected = false;
+                this.currentPrice = 0;
+                this.previousPrice = 0;
+                this.priceHistory = [];
+                this.matrixColumns = [];
+                this.maxColumns = 50;
+                this.statusElement = document.getElementById('status');
+                this.priceElement = document.getElementById('price-display');
+                this.matrixContainer = document.getElementById('matrix-container');
+                
+                this.init();
+            }
+            
+            init() {
+                this.connectWebSocket();
+                this.createMatrixColumns();
+            }
+            
+            connectWebSocket() {
+                const wsUrl = 'wss://ws-feed.exchange.coinbase.com';
+                
+                try {
+                    this.ws = new WebSocket(wsUrl);
+                    
+                    this.ws.onopen = () => {
+                        this.isConnected = true;
+                        this.updateStatus('Connected to Coinbase');
+                        
+                        // Send subscription message within 5 seconds
+                        const subscribeMessage = {
+                            type: "subscribe",
+                            product_ids: ["BTC-USD"],
+                            channels: ["ticker"]
+                        };
+                        
+                        this.ws.send(JSON.stringify(subscribeMessage));
+                        this.updateStatus('Subscribed to BTC-USD ticker');
+                    };
+                    
+                    this.ws.onmessage = (event) => {
+                        try {
+                            const data = JSON.parse(event.data);
+                            
+                            if (data.type === 'ticker') {
+                                this.handleTickerData(data);
+                            } else if (data.type === 'heartbeat') {
+                                // Handle heartbeat
+                                console.log('Heartbeat received:', data.sequence);
+                            }
+                        } catch (error) {
+                            console.error('Error parsing message:', error);
+                        }
+                    };
+                    
+                    this.ws.onclose = () => {
+                        this.isConnected = false;
+                        this.updateStatus('Connection closed. Reconnecting...');
+                        
+                        // Reconnect after 5 seconds
+                        setTimeout(() => {
+                            this.connectWebSocket();
+                        }, 5000);
+                    };
+                    
+                    this.ws.onerror = (error) => {
+                        console.error('WebSocket error:', error);
+                        this.updateStatus('Connection error');
+                    };
+                    
+                } catch (error) {
+                    console.error('Failed to create WebSocket:', error);
+                    this.updateStatus('Failed to connect');
+                }
+            }
+            
+            handleTickerData(data) {
+                const price = parseFloat(data.price);
+                const time = data.time;
+                
+                this.previousPrice = this.currentPrice;
+                this.currentPrice = price;
+                
+                // Update price display
+                this.priceElement.textContent = `$${price.toLocaleString()}`;
+                
+                // Determine price movement
+                const priceChange = price - this.previousPrice;
+                const isUp = priceChange > 0;
+                const isDown = priceChange < 0;
+                
+                // Update price history
+                this.priceHistory.push({
+                    price: price,
+                    time: time,
+                    change: priceChange,
+                    isUp: isUp,
+                    isDown: isDown
+                });
+                
+                // Keep only last 100 entries
+                if (this.priceHistory.length > 100) {
+                    this.priceHistory.shift();
+                }
+                
+                // Update matrix visualization
+                this.updateMatrix(isUp, isDown, price);
+                
+                console.log(`Price: $${price}, Change: ${priceChange > 0 ? '+' : ''}${priceChange.toFixed(2)}`);
+            }
+            
+            updateMatrix(isUp, isDown, price) {
+                // Create a new matrix column with the price data
+                const column = document.createElement('div');
+                column.className = `matrix-column ${isUp ? 'price-up' : isDown ? 'price-down' : ''}`;
+                column.style.left = `${Math.random() * 100}%`;
+                column.style.animationDelay = `${Math.random() * 3}s`;
+                
+                // Generate matrix-style content
+                const matrixContent = this.generateMatrixContent(price, isUp, isDown);
+                column.innerHTML = matrixContent;
+                
+                this.matrixContainer.appendChild(column);
+                
+                // Remove old columns to prevent memory issues
+                if (this.matrixContainer.children.length > this.maxColumns) {
+                    this.matrixContainer.removeChild(this.matrixContainer.firstChild);
+                }
+            }
+            
+            generateMatrixContent(price, isUp, isDown) {
+                const priceStr = price.toString();
+                const symbols = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+                let content = '';
+                
+                // Create multiple lines of matrix-style content
+                for (let i = 0; i < 20; i++) {
+                    let line = '';
+                    for (let j = 0; j < 15; j++) {
+                        if (i === 10 && j < priceStr.length) {
+                            // Insert price in the middle
+                            line += priceStr[j];
+                        } else {
+                            line += symbols[Math.floor(Math.random() * symbols.length)];
+                        }
+                    }
+                    content += line + '<br>';
+                }
+                
+                return content;
+            }
+            
+            createMatrixColumns() {
+                // Create initial matrix columns
+                for (let i = 0; i < 20; i++) {
+                    const column = document.createElement('div');
+                    column.className = 'matrix-column';
+                    column.style.left = `${Math.random() * 100}%`;
+                    column.style.animationDelay = `${Math.random() * 3}s`;
+                    column.innerHTML = this.generateMatrixContent(0, false, false);
+                    this.matrixContainer.appendChild(column);
+                }
+            }
+            
+            updateStatus(message) {
+                this.statusElement.textContent = message;
+                console.log(message);
+            }
+        }
+        
+        // Initialize the Bitcoin Matrix when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new BitcoinMatrix();
+        });
+    </script>
+</body>
+</html>
