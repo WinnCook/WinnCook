@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin Matrix Visualization</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+        }
+        
+        #container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        #canvas {
+            display: block;
+            background: #000;
+        }
+        
+        #status {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #0f0;
+        }
+        
+        #price-display {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #0f0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .price-up {
+            color: #0f0 !important;
+            text-shadow: 0 0 10px #0f0;
+        }
+        
+        .price-down {
+            color: #f00 !important;
+            text-shadow: 0 0 10px #f00;
+        }
+        
+        #controls {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #0f0;
+        }
+        
+        button {
+            background: #000;
+            color: #0f0;
+            border: 1px solid #0f0;
+            padding: 5px 10px;
+            margin: 2px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        
+        button:hover {
+            background: #0f0;
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <canvas id="canvas"></canvas>
+        
+        <div id="status">
+            <div>Status: <span id="connection-status">Disconnected</span></div>
+            <div>Messages: <span id="message-count">0</span></div>
+            <div>Last Update: <span id="last-update">Never</span></div>
+        </div>
+        
+        <div id="price-display">
+            <div>BTC-USD: $<span id="current-price">--</span></div>
+            <div>Change: <span id="price-change">--</span></div>
+        </div>
+        
+        <div id="controls">
+            <button onclick="toggleConnection()">Connect/Disconnect</button>
+            <button onclick="toggleMatrix()">Toggle Matrix Effect</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

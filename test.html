@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coinbase WebSocket Test</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background: #000;
+            color: #0f0;
+            padding: 20px;
+        }
+        #output {
+            background: #111;
+            padding: 15px;
+            border: 1px solid #0f0;
+            height: 400px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+        button {
+            background: #000;
+            color: #0f0;
+            border: 1px solid #0f0;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0f0;
+            color: #000;
+        }
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #0f0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Coinbase WebSocket Connection Test</h1>
+    
+    <div class="status">
+        <strong>Status:</strong> <span id="status">Disconnected</span><br>
+        <strong>Messages Received:</strong> <span id="msgCount">0</span><br>
+        <strong>Last Price:</strong> $<span id="lastPrice">--</span><br>
+        <strong>Last Update:</strong> <span id="lastUpdate">Never</span>
+    </div>
+    
+    <button onclick="connect()">Connect</button>
+    <button onclick="disconnect()">Disconnect</button>
+    <button onclick="clearOutput()">Clear Log</button>
+    
+    <div id="output"></div>
+
+    <script>
+        let ws = null;
+        let messageCount = 0;
+        
+        function log(message) {
+            const output = document.getElementById('output');
+            const timestamp = new Date().toLocaleTimeString();
+            output.innerHTML += `[${timestamp}] ${message}<br>`;
+            output.scrollTop = output.scrollHeight;
+        }
+        
+        function updateStatus(status) {
+            document.getElementById('status').textContent = status;
+        }
+        
+        function connect() {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                log('Already connected');
+                return;
+            }
+            
+            log('Connecting to Coinbase WebSocket...');
+            updateStatus('Connecting...');
+            
+            ws = new WebSocket('wss://ws-feed.exchange.coinbase.com');
+            
+            ws.onopen = function() {
+                log('✓ WebSocket connected successfully!');
+                updateStatus('Connected');
+                
+                // Send subscription message
+                const subscribeMessage = {
+                    "type": "subscribe",
+                    "product_ids": ["BTC-USD"],
+                    "channels": ["ticker"]
+                };
+                
+                ws.send(JSON.stringify(subscribeMessage));
+                log('Subscription message sent: ' + JSON.stringify(subscribeMessage));
+            };
+            
+            ws.onmessage = function(event) {
+                messageCount++;
+                document.getElementById('msgCount').textContent = messageCount;
+                document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+                
+                try {
+                    const data = JSON.parse(event.data);
+                    
+                    if (data.type === 'ticker' && data.product_id === 'BTC-USD') {
+                        const price = parseFloat(data.price).toFixed(2);
+                        document.getElementById('lastPrice').textContent = price;
+                        log(`💰 BTC Price: $${price} (${data.time})`);
+                    } else if (data.type === 'subscriptions') {
+                        log('✓ Subscription confirmed: ' + JSON.stringify(data));
+                    } else {
+                        log(`📨 ${data.type}: ${JSON.stringify(data).substring(0, 100)}...`);
+                    }
+                } catch (e) {
+                    log('❌ Error parsing message: ' + e.message);
+                }
+            };
+            
+            ws.onclose = function(event) {
+                log(`❌ WebSocket closed: ${event.code} - ${event.reason}`);
+                updateStatus('Disconnected');
+            };
+            
+            ws.onerror = function(error) {
+                log('❌ WebSocket error: ' + error);
+                updateStatus('Error');
+            };
+        }
+        
+        function disconnect() {
+            if (ws) {
+                ws.close();
+                ws = null;
+                log('Disconnected by user');
+                updateStatus('Disconnected');
+            }
+        }
+        
+        function clearOutput() {
+            document.getElementById('output').innerHTML = '';
+        }
+        
+        // Auto-connect on page load
+        window.onload = function() {
+            log('Page loaded. Click Connect to test the WebSocket connection.');
+        };
+    </script>
+</body>
+</html>
