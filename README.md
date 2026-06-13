@@ -1,30 +1,31 @@
 # Winn Cook
 
-I build practical data and AI workflows for institutional reporting, grants,
-federal-award data, and operations teams that need source-backed decisions.
+I build practical data and reporting workflows for higher education, financial
+systems, grants data, and operations teams that need source-backed decisions.
 
 ```text
-Focus: higher-ed analytics | grants intelligence | research operations | AI workflow implementation
-Tools: Python | SQL | DuckDB | APIs | Workday/Banner reporting | Tableau/Power BI | review surfaces
-Style: evidence first, clear boundaries, human review, calm execution
+Focus: higher-ed analytics | compliance reporting | research administration data | financial systems
+Tools: Python | SQL | DuckDB | APIs | Workday/Banner reporting | Tableau/Power BI | review queues
+Style: evidence first, clear definitions, human review, calm execution
 ```
 
 ## What I Work On
 
 - Turning scattered public and operational data into short, reviewable queues.
-- Rebuilding reporting workflows where definitions, deadlines, and auditability matter.
+- Rebuilding reporting workflows where definitions, deadlines, controls, and auditability matter.
 - Designing small tools that preserve source links, assumptions, and human-review notes.
-- Using AI to accelerate workflow implementation without hiding the evidence trail.
+- Using automation carefully for documentation, QA, workflow mapping, and review support.
 
 ## Technical Themes
 
 | Theme | What I care about |
 | --- | --- |
 | Institutional analytics | IPEDS, enrollment, completions, finance, workforce, compliance reporting |
-| Grants intelligence | Grants.gov, USAspending, NSF/NIH/agency records, source-linked fit checks |
-| Research operations | Awards, closeout, reporting, faculty/research signals, review routing |
+| Financial systems | Workday/Banner reporting, source definitions, reconciled extracts, QA checks |
+| Grants and awards data | Grants.gov, USAspending, NSF/NIH/agency records, source-linked review |
+| Research operations | Awards, closeout, sponsor reporting context, faculty/research signals, review routing |
 | Data products | DuckDB, Postgres, stable views, CLI contracts, reproducible extracts |
-| AI workflows | Review packets, prompt patterns, analyst copilots, protected demos |
+| Responsible automation | Review packets, documentation support, analyst workflows, protected demos |
 
 ## Open-Source Systems I Track
 
@@ -52,3 +53,11 @@ touches employer systems, client data, private financial records, or protected
 workflow data. Public artifacts should show the architecture, data contracts,
 source discipline, redaction boundary, and review surface without exposing the
 underlying private data.
+
+## Research-Administration Data Project Language
+
+This project style demonstrates source-linked public-data ingestion, review
+queue design, and human-reviewed workflow logic for research-administration
+contexts. It does not use internal institutional data and does not make pursuit,
+eligibility, budget, compliance, or sponsor-term decisions. Its purpose is to
+show how public data can be organized into transparent, reviewable workflows.
