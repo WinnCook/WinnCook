@@ -6,7 +6,7 @@ I work mainly in Python, TypeScript, SQL, and DuckDB. My current focus is workfl
 
 ## Current projects
 
-### GrantNexus / First Principles Grants
+### Grant Nexus
 
 A protected federal grant-discovery pilot organized around 40 generic academic department profiles.
 
@@ -14,7 +14,7 @@ Deterministic retrieval and reranking narrow the candidates; bounded AI judgment
 
 [Project overview](https://grantnexus.ai/)
 
-### OpenDurango / AskDurango
+### Ask Durango
 
 A private civic-data system that combines La Plata County assessor records, ArcGIS layers, Colorado business entities, and other public sources in DuckDB.
 
