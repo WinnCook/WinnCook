@@ -1,8 +1,12 @@
 # Winn Cook
 
-Building with Claude Code, Codex, and Grok. Open to collaboration.
+I build AI-enabled systems around real business and institutional workflows. My work combines business analysis, financial and operational data, software automation, and clear verification so people can understand and trust the result.
 
-I work mainly in Python, TypeScript, SQL, and DuckDB. My current focus is workflow and loop automation, public-data systems, and separating deterministic checks from AI judgment.
+I lead institutional research at Fort Lewis College, chair the Data Governance Committee, advise the AI Governance Committee, and serve as an AI expert with the Fort Lewis College AI Institute. I also work independently with small businesses on workflow design and AI implementation.
+
+I use Claude, Cowork, Claude Code, and Codex daily. My technical work is mainly in Python, TypeScript, SQL, and DuckDB, with a focus on workflow automation, public-data systems, and clear boundaries between deterministic checks and AI judgment.
+
+[Website](https://www.winncook.ai/) · [LinkedIn](https://www.linkedin.com/in/winn-cook/)
 
 ## Current projects
 
@@ -44,4 +48,4 @@ Each brick declares its own manifest, writes structured JSON to stdout, keeps lo
 
 Most project repositories are private because they include internal systems, client data, or active product work. I can discuss architecture, test strategy, and design tradeoffs without exposing protected data.
 
-Professional profile: [LinkedIn](https://www.linkedin.com/in/winn-cook/)
+Professional profile: [winncook.ai](https://www.winncook.ai/) · [LinkedIn](https://www.linkedin.com/in/winn-cook/)
