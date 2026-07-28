@@ -6,8 +6,6 @@ I lead institutional research at Fort Lewis College, chair the Data Governance C
 
 I use Claude, Cowork, Claude Code, and Codex daily. My technical work is mainly in Python, TypeScript, SQL, and DuckDB, with a focus on workflow automation, public-data systems, and clear boundaries between deterministic checks and AI judgment.
 
-[Website](https://www.winncook.ai/) · [LinkedIn](https://www.linkedin.com/in/winn-cook/)
-
 ## Current projects
 
 ### Grant Nexus
@@ -47,5 +45,3 @@ Each brick declares its own manifest, writes structured JSON to stdout, keeps lo
 ## Source access
 
 Most project repositories are private because they include internal systems, client data, or active product work. I can discuss architecture, test strategy, and design tradeoffs without exposing protected data.
-
-Professional profile: [winncook.ai](https://www.winncook.ai/) · [LinkedIn](https://www.linkedin.com/in/winn-cook/)
