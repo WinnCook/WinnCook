@@ -1,47 +1,31 @@
 # Winn Cook
 
-I build AI-enabled systems around real business and institutional workflows. My work combines business analysis, financial and operational data, software automation, and clear verification so people can understand and trust the result.
+I’m a Senior Analyst in Institutional Research at Fort Lewis College. I build reporting, public-data analyses and workflow tools in Python and SQL. My work includes data governance, institutional reporting and analysis for college leadership.
 
-I lead institutional research at Fort Lewis College, chair the Data Governance Committee, advise the AI Governance Committee, and serve as an AI expert with the Fort Lewis College AI Institute. I also work independently with small businesses on workflow design and AI implementation.
+## Selected work
 
-I use Claude, Cowork, Claude Code, and Codex daily. My technical work is mainly in Python, TypeScript, SQL, and DuckDB, with a focus on workflow automation, public-data systems, and clear boundaries between deterministic checks and AI judgment.
+### IPEDS peer analysis
+Reproducible institutional comparisons using Python and DuckDB, with public data and source records.
 
-## Current projects
+[View the analysis](https://winncook.github.io/fort-lewis-ipeds-peer-analysis/)
+
+### Compensation model
+An illustrative public scenario model for comparing compensation assumptions over time. This demonstration is separate from the internal analysis used by the college’s salary committee; its figures are modeled scenarios, not realized outcomes.
+
+[Explore the model](https://winncook.github.io/fort-lewis-compensation-demo/)
 
 ### Grant Nexus
+A grant-discovery pilot that matches funding opportunities to academic-area profiles. The Fort Lewis pilot uses 20 broad profiles drawn from a 40-profile catalog. I designed the workflow, directed AI-assisted implementation and maintain the system. The pilot remains protected.
 
-A protected federal grant-discovery pilot organized around 40 generic academic department profiles.
+### Public-data tools
+I build tools for working with county records and other public datasets. I also build Durango Mini, a browser-based 3D simulation using local geographic data.
 
-Deterministic retrieval and reranking narrow the candidates; bounded AI judgment scores relevance against source evidence; release gates control what becomes accepted output.
+## How I work
 
-[Project overview](https://grantnexus.ai/)
-
-### Ask Durango
-
-A private civic-data system that combines La Plata County assessor records, ArcGIS layers, Colorado business entities, and other public sources in DuckDB.
-
-The Next.js interface uses LLM-to-SQL for open-ended questions and deterministic paths for property lookups, while retaining source, freshness, and uncertainty.
-
-### Durango Mini
-
-A source-backed 3D browser simulation of the Main Avenue–Fort Lewis corridor built with TypeScript, React Three Fiber, Three.js, Rapier, and Python/GDAL.
-
-Official roads, trails, rail, buildings, and hydrology feed a bounded, full-preload world; source facts and deterministic playability fallbacks are tracked separately.
-
-### Brick CLI
-
-A private library of composable Python CLIs for sources including Grants.gov, IPEDS, Census ACS, USASpending, OpenStreetMap, NOAA, and Colorado public data.
-
-Each brick declares its own manifest, writes structured JSON to stdout, keeps logs and errors on stderr, and runs through offline contract checks and live-source smokes.
-
-## How I build
-
-- Build workflows as explicit loops with known inputs, bounded steps, verification, and recoverable state.
-- Use deterministic code for facts and rules that can be tested. Treat AI ranking, interpretation, and generation as candidate output until it passes the relevant gate.
-- Use agents for bounded tasks, but require test output and independent review before treating the work as complete.
-- Keep source provenance, freshness, and uncertainty visible when working with public data.
-- Keep practices current by following a curated group of agentic engineers and maintainers, reviewing their published work, and testing recommendations before adopting them.
+- Start with the question, source data and intended user.
+- Use SQL and Python for repeatable analysis and validation; apply AI where it helps with interpretation or workflow.
+- Document definitions and limitations so another person can understand and rerun the work.
 
 ## Source access
 
-Most project repositories are private because they include internal systems, client data, or active product work. I can discuss architecture, test strategy, and design tradeoffs without exposing protected data.
+Many project repositories remain private. The two work samples above are publicly accessible; I can discuss implementation and design decisions without exposing private data.
