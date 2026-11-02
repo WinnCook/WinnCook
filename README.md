@@ -5,14 +5,7 @@ I’m a Senior Analyst in Institutional Research at Fort Lewis College. I build 
 ## Selected work
 
 ### IPEDS peer analysis
-Reproducible institutional comparisons using Python and DuckDB, with public data and source records.
-
-[View the analysis](https://winncook.github.io/fort-lewis-ipeds-peer-analysis/)
-
-### Compensation model
-An illustrative public scenario model for comparing compensation assumptions over time. This demonstration is separate from the internal analysis used by the college’s salary committee; its figures are modeled scenarios, not realized outcomes.
-
-[Explore the model](https://winncook.github.io/fort-lewis-compensation-demo/)
+Reproducible institutional comparisons using Python and DuckDB, with public data and source records
 
 ### Grant Nexus
 A grant-discovery pilot that matches funding opportunities to academic-area profiles. The Fort Lewis pilot uses 20 broad profiles drawn from a 40-profile catalog. I designed the workflow, directed AI-assisted implementation and maintain the system. The pilot remains protected.
